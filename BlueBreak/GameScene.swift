@@ -139,7 +139,7 @@ class GameScene: SKScene {
                     paddle.position.x += CGFloat(paddleVelocity)
                 }
                 else {
-                    paddle.position.x = self.size.width - paddle.size.width / 2
+                    paddle.position.x = self.size.width - paddle.size.width / 2 - 1
                 }
             }
         }
