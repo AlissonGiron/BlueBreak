@@ -15,10 +15,15 @@ class GameScene: SKScene {
     var paddle: SKSpriteNode!
     var paddleVelocity = 0.0
     
+    let velocityMultiplicationFactor = 128.0
+    let initialVelocity = 8.0
+    
     var lastUpdateTime = 0.0
     
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
+        
+        paddleVelocity = initialVelocity
         
         for child in self.children {
             if child.name == "paddle" {
@@ -109,13 +114,13 @@ class GameScene: SKScene {
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         isFingerOnScreen = false
         touchLocation = 0.0
-        paddleVelocity = 0.0
+        paddleVelocity = initialVelocity
     }
    
     override func update(currentTime: CFTimeInterval) {
         
         if (isFingerOnScreen) {
-            paddleVelocity += 2 * (currentTime - lastUpdateTime)
+            paddleVelocity += velocityMultiplicationFactor * (currentTime - lastUpdateTime)
             MovePaddle(touchLocation)
         }
         lastUpdateTime = currentTime
