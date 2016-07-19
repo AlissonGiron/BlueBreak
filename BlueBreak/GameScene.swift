@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import GameplayKit
 
 let BallCategoryName = "ball"
 let PaddleCategoryName = "paddle"
@@ -31,6 +32,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     let initialVelocity = 8.0
     
     var lastUpdateTime = 0.0
+    
+    
+    lazy var gameState: GKStateMachine = GKStateMachine(states: [
+        WaitingForTap(scene: self),
+        Playing(scene: self),
+        GameOver(scene: self)])
+    
+
     
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
@@ -156,6 +165,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         let touch = touches.first
         touchLocation = touch!.locationInNode(self).x
         isFingerOnScreen = true
+        
+        switch gameState.currentState {
+        case is WaitingForTap:
+            gameState.enterState(Playing)
+            isFingerOnScreen = true
+            
+        case is Playing:
+            let touch = touches.first
+            let touchLocation = touch!.locationInNode(self)
+            
+            if let body = physicsWorld.bodyAtPoint(touchLocation) {
+                if body.node!.name == PaddleCategoryName {
+                    isFingerOnScreen = true
+                }
+            }
+        case is GameOver:
+            let newScene = GameScene(fileNamed:"GameScene")
+            newScene!.scaleMode = .AspectFit
+            let reveal = SKTransition.flipHorizontalWithDuration(0.5)
+            self.view?.presentScene(newScene!, transition: reveal)
+            
+        default:
+            break
+        }
+
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -195,4 +229,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
             }
         }
     }
+    
+    func randomFloat(from from:CGFloat, to:CGFloat) -> CGFloat {
+        let rand:CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+        return (rand) * (to - from) + from
+    }
+    
 }
