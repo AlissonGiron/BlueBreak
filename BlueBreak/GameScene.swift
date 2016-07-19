@@ -124,7 +124,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         
     }
     
-    
     func didBeginContact(contact: SKPhysicsContact) {
         // 1
         var firstBody: SKPhysicsBody
@@ -137,10 +136,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
             firstBody = contact.bodyB
             secondBody = contact.bodyA
         }
-        /* 3
-        if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BottomCategory {
+        // 3
+        if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == TopCategory {
             print("Hit bottom. First contact has been made.")
-        }*/
+            // Bluetooth
+        }
+        
+        if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
+            breakBlock(secondBody.node!)
+            //TODO: check if the game has been won
+        }
     }
     
     func breakBlock(node: SKNode) {
