@@ -8,17 +8,57 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
+let BallCategoryName = "ball"
+let PaddleCategoryName = "paddle"
+let BlockCategoryName = "block"
+let GameMessageName = "gameMessage"
+
+let BallCategory   : UInt32 = 0x1 << 0
+let TopCategory : UInt32 = 0x1 << 1
+let BlockCategory  : UInt32 = 0x1 << 2
+let PaddleCategory : UInt32 = 0x1 << 3
+let BorderCategory : UInt32 = 0x1 << 4
+
+
+class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     var isFingerOnScreen = false
     var touchLocation: CGFloat = 0.0
     var paddle: SKSpriteNode!
     var paddleVelocity = 0.0
     
+    let velocityMultiplicationFactor = 128.0
+    let initialVelocity = 8.0
+    
     var lastUpdateTime = 0.0
     
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
+        
+        //Barreira em volta da tela, para a bola não escapar
+        let borderBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
+        borderBody.friction = 0
+        self.physicsBody = borderBody
+        
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: 0.0)
+        physicsWorld.contactDelegate = self
+        
+        let paddle = childNodeWithName(PaddleCategoryName) as! SKSpriteNode
+        let ball = childNodeWithName(BallCategoryName) as! SKSpriteNode
+        ball.physicsBody!.applyImpulse(CGVector(dx: 2.0, dy: -2.0))
+        
+        let topRect = CGRect(x: frame.origin.x, y: frame.size.height - 1, width: frame.size.width, height: 1)
+        let top = SKNode()
+        top.physicsBody = SKPhysicsBody(edgeLoopFromRect: topRect)
+        addChild(top)
+        
+        top.physicsBody!.categoryBitMask = TopCategory
+        ball.physicsBody!.categoryBitMask = BallCategory
+        paddle.physicsBody!.categoryBitMask = PaddleCategory
+        borderBody.categoryBitMask = BorderCategory
+        
+        
+        paddleVelocity = initialVelocity
         
         for child in self.children {
             if child.name == "paddle" {
@@ -57,6 +97,7 @@ class GameScene: SKScene {
                         block.position.y += 12
                         block.zRotation = -3
                     case 2:
+                        block.zRotation = CGFloat(M_PI)
                         block.position.y += 16
                     case 3:
                         block.position.y += 12
@@ -72,33 +113,39 @@ class GameScene: SKScene {
                 block.physicsBody!.affectedByGravity = false
                 block.physicsBody!.dynamic = false
             
-                //block.name = BlockCategoryName
-                //block.physicsBody!.categoryBitMask = BlockCategory
+                block.name = BlockCategoryName
+                block.physicsBody!.categoryBitMask = BlockCategory
                 block.zPosition = 5
                 addChild(block)
             }
         }
         
-        //ball.physicsBody!.contactTestBitMask = BottomCategory | BlockCategory
+        ball.physicsBody!.contactTestBitMask = TopCategory | BlockCategory
+        
     }
     
-    /* QUEBRAR BLOCO, FALTA A PARTE DE COLISAO
+    
     func didBeginContact(contact: SKPhysicsContact) {
-        if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
-            breakBlock(secondBody.node!)
-            //TODO: check if the game has been won
+        // 1
+        var firstBody: SKPhysicsBody
+        var secondBody: SKPhysicsBody
+        // 2
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+            firstBody = contact.bodyA
+            secondBody = contact.bodyB
+        } else {
+            firstBody = contact.bodyB
+            secondBody = contact.bodyA
         }
+        /* 3
+        if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BottomCategory {
+            print("Hit bottom. First contact has been made.")
+        }*/
     }
     
     func breakBlock(node: SKNode) {
-        let particles = SKEmitterNode(fileNamed: "BrokenPlatform")!
-        particles.position = node.position
-        particles.zPosition = 3
-        addChild(particles)
-        particles.runAction(SKAction.sequence([SKAction.waitForDuration(1.0), SKAction.removeFromParent()]))
         node.removeFromParent()
     }
-    */
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch = touches.first
@@ -109,37 +156,37 @@ class GameScene: SKScene {
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         isFingerOnScreen = false
         touchLocation = 0.0
-        paddleVelocity = 0.0
+        paddleVelocity = initialVelocity
     }
    
     override func update(currentTime: CFTimeInterval) {
         
         if (isFingerOnScreen) {
-            paddleVelocity += 2 * (currentTime - lastUpdateTime)
+            paddleVelocity += velocityMultiplicationFactor * (currentTime - lastUpdateTime)
             MovePaddle(touchLocation)
         }
         lastUpdateTime = currentTime
     }
     
     func MovePaddle(touchLocation: CGFloat) {
-        print(paddle.position.x, self.size.width - paddle.size.width / 2)
-        
-        if paddle.position.x <= self.size.width - paddle.size.width / 2 && paddle.position.x - paddle.size.width / 2 >= 0 {
-            
-            if touchLocation < self.size.width / 2 {
+        //Se o usuário tocar na parte esquerda da tela, mover a raquete para a esquerda
+        if touchLocation < self.size.width / 2 {
+            //Checar se a raquete vai sair da tela
+            if paddle.position.x - paddle.size.width / 2 - CGFloat(paddleVelocity) + 1 > 0 {
                 paddle.position.x -= CGFloat(paddleVelocity)
             }
             else {
-                paddle.position.x += CGFloat(paddleVelocity)
+                paddle.position.x = paddle.size.width / 2 + 1
             }
         }
+        //Caso contrário, mover para a direita
         else {
-            //Checar se a raquete passou da borda da tela
-            if paddle.position.x > self.size.width - paddle.size.width / 2 {
-                paddle.position.x = self.size.width - paddle.size.width / 2
+            //Checar se a raquete vai sair da tela
+            if paddle.position.x + paddle.size.width / 2 + CGFloat(paddleVelocity) - 1 < self.size.width {
+                paddle.position.x += CGFloat(paddleVelocity)
             }
-            else if paddle.position.x - paddle.size.width / 2 < 0 {
-                paddle.position.x = paddle.size.width / 2 + 1
+            else {
+                paddle.position.x = self.size.width - paddle.size.width / 2 - 1
             }
         }
     }
