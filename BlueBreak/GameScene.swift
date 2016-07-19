@@ -95,6 +95,11 @@ class GameScene: SKScene {
             }
         }
         
+        //Barreira em volta da tela, para a bola não escapar
+        let borderBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
+        borderBody.friction = 0
+        self.physicsBody = borderBody
+        
         //ball.physicsBody!.contactTestBitMask = BottomCategory | BlockCategory
     }
     
