@@ -10,6 +10,12 @@ import SpriteKit
 
 class GameScene: SKScene {
     
+    let BallCategory   : UInt32 = 0x1 << 0
+    let BottomCategory : UInt32 = 0x1 << 1
+    let BlockCategory  : UInt32 = 0x1 << 2
+    let PaddleCategory : UInt32 = 0x1 << 3
+    let BorderCategory : UInt32 = 0x1 << 4
+    
     var isFingerOnScreen = false
     var touchLocation: CGFloat = 0.0
     var paddle: SKSpriteNode!
@@ -22,6 +28,11 @@ class GameScene: SKScene {
     
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
+        
+        let topRect = CGRect(x: frame.origin.x, y: frame.size.height - 1, width: frame.size.width, height: 1)
+        let top = SKNode()
+        top.physicsBody = SKPhysicsBody(edgeLoopFromRect: topRect)
+        addChild(top)
         
         paddleVelocity = initialVelocity
         
