@@ -18,15 +18,7 @@ class GameScene: SKScene {
     var lastUpdateTime = 0.0
     
     override func didMoveToView(view: SKView) {
-        
-        /*for child in self.children {
-            if child.name == "paddle" {
-                if let child = child as? SKSpriteNode {
-                    self.paddle = child
-                }
-            }
-        }*/
-        
+        super.didMoveToView(view)
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
