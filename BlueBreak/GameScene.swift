@@ -8,13 +8,19 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
-    
-    let BallCategory   : UInt32 = 0x1 << 0
-    let BottomCategory : UInt32 = 0x1 << 1
-    let BlockCategory  : UInt32 = 0x1 << 2
-    let PaddleCategory : UInt32 = 0x1 << 3
-    let BorderCategory : UInt32 = 0x1 << 4
+let BallCategoryName = "ball"
+let PaddleCategoryName = "paddle"
+let BlockCategoryName = "block"
+let GameMessageName = "gameMessage"
+
+let BallCategory   : UInt32 = 0x1 << 0
+let TopCategory : UInt32 = 0x1 << 1
+let BlockCategory  : UInt32 = 0x1 << 2
+let PaddleCategory : UInt32 = 0x1 << 3
+let BorderCategory : UInt32 = 0x1 << 4
+
+
+class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     var isFingerOnScreen = false
     var touchLocation: CGFloat = 0.0
@@ -29,10 +35,28 @@ class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
         
+        //Barreira em volta da tela, para a bola não escapar
+        let borderBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
+        borderBody.friction = 0
+        self.physicsBody = borderBody
+        
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: 0.0)
+        physicsWorld.contactDelegate = self
+        
+        let paddle = childNodeWithName(PaddleCategoryName) as! SKSpriteNode
+        let ball = childNodeWithName(BallCategoryName) as! SKSpriteNode
+        ball.physicsBody!.applyImpulse(CGVector(dx: 2.0, dy: -2.0))
+        
         let topRect = CGRect(x: frame.origin.x, y: frame.size.height - 1, width: frame.size.width, height: 1)
         let top = SKNode()
         top.physicsBody = SKPhysicsBody(edgeLoopFromRect: topRect)
         addChild(top)
+        
+        top.physicsBody!.categoryBitMask = TopCategory
+        ball.physicsBody!.categoryBitMask = BallCategory
+        paddle.physicsBody!.categoryBitMask = PaddleCategory
+        borderBody.categoryBitMask = BorderCategory
+        
         
         paddleVelocity = initialVelocity
         
@@ -88,38 +112,39 @@ class GameScene: SKScene {
                 block.physicsBody!.affectedByGravity = false
                 block.physicsBody!.dynamic = false
             
-                //block.name = BlockCategoryName
-                //block.physicsBody!.categoryBitMask = BlockCategory
+                block.name = BlockCategoryName
+                block.physicsBody!.categoryBitMask = BlockCategory
                 block.zPosition = 5
                 addChild(block)
             }
         }
         
-        //Barreira em volta da tela, para a bola não escapar
-        let borderBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
-        borderBody.friction = 0
-        self.physicsBody = borderBody
+        ball.physicsBody!.contactTestBitMask = TopCategory | BlockCategory
         
-        //ball.physicsBody!.contactTestBitMask = BottomCategory | BlockCategory
     }
     
-    /* QUEBRAR BLOCO, FALTA A PARTE DE COLISAO
+    
     func didBeginContact(contact: SKPhysicsContact) {
-        if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
-            breakBlock(secondBody.node!)
-            //TODO: check if the game has been won
+        // 1
+        var firstBody: SKPhysicsBody
+        var secondBody: SKPhysicsBody
+        // 2
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+            firstBody = contact.bodyA
+            secondBody = contact.bodyB
+        } else {
+            firstBody = contact.bodyB
+            secondBody = contact.bodyA
         }
+        /* 3
+        if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BottomCategory {
+            print("Hit bottom. First contact has been made.")
+        }*/
     }
     
     func breakBlock(node: SKNode) {
-        let particles = SKEmitterNode(fileNamed: "BrokenPlatform")!
-        particles.position = node.position
-        particles.zPosition = 3
-        addChild(particles)
-        particles.runAction(SKAction.sequence([SKAction.waitForDuration(1.0), SKAction.removeFromParent()]))
         node.removeFromParent()
     }
-    */
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch = touches.first
