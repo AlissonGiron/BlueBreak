@@ -127,13 +127,23 @@ class GameScene: SKScene {
         if paddle.position.x <= self.size.width - paddle.size.width / 2 && paddle.position.x - paddle.size.width / 2 >= 0 {
             
             if touchLocation < self.size.width / 2 {
-                paddle.position.x -= CGFloat(paddleVelocity)
+                if paddle.position.x - paddle.size.width / 2 - CGFloat(paddleVelocity) > 0 {
+                    paddle.position.x -= CGFloat(paddleVelocity)
+                }
+                else {
+                    paddle.position.x = paddle.size.width / 2 + 1
+                }
             }
             else {
-                paddle.position.x += CGFloat(paddleVelocity)
+                if paddle.position.x + paddle.size.width / 2 + CGFloat(paddleVelocity) < self.size.width {
+                    paddle.position.x += CGFloat(paddleVelocity)
+                }
+                else {
+                    paddle.position.x = self.size.width - paddle.size.width / 2
+                }
             }
         }
-        else {
+        /*else {
             //Checar se a raquete passou da borda da tela
             if paddle.position.x > self.size.width - paddle.size.width / 2 {
                 paddle.position.x = self.size.width - paddle.size.width / 2
@@ -141,6 +151,6 @@ class GameScene: SKScene {
             else if paddle.position.x - paddle.size.width / 2 < 0 {
                 paddle.position.x = paddle.size.width / 2 + 1
             }
-        }
+        }*/
     }
 }
