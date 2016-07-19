@@ -62,6 +62,7 @@ class GameScene: SKScene {
                         block.position.y += 12
                         block.zRotation = -3
                     case 2:
+                        block.zRotation = CGFloat(M_PI)
                         block.position.y += 16
                     case 3:
                         block.position.y += 12
@@ -101,11 +102,6 @@ class GameScene: SKScene {
     }
     
     func breakBlock(node: SKNode) {
-        let particles = SKEmitterNode(fileNamed: "BrokenPlatform")!
-        particles.position = node.position
-        particles.zPosition = 3
-        addChild(particles)
-        particles.runAction(SKAction.sequence([SKAction.waitForDuration(1.0), SKAction.removeFromParent()]))
         node.removeFromParent()
     }
     */
@@ -132,35 +128,25 @@ class GameScene: SKScene {
     }
     
     func MovePaddle(touchLocation: CGFloat) {
-        print(paddle.position.x, self.size.width - paddle.size.width / 2)
-        
-        if paddle.position.x <= self.size.width - paddle.size.width / 2 && paddle.position.x - paddle.size.width / 2 >= 0 {
-            
-            if touchLocation < self.size.width / 2 {
-                if paddle.position.x - paddle.size.width / 2 - CGFloat(paddleVelocity) > 0 {
-                    paddle.position.x -= CGFloat(paddleVelocity)
-                }
-                else {
-                    paddle.position.x = paddle.size.width / 2 + 1
-                }
+        //Se o usuário tocar na parte esquerda da tela, mover a raquete para a esquerda
+        if touchLocation < self.size.width / 2 {
+            //Checar se a raquete vai sair da tela
+            if paddle.position.x - paddle.size.width / 2 - CGFloat(paddleVelocity) + 1 > 0 {
+                paddle.position.x -= CGFloat(paddleVelocity)
             }
             else {
-                if paddle.position.x + paddle.size.width / 2 + CGFloat(paddleVelocity) < self.size.width {
-                    paddle.position.x += CGFloat(paddleVelocity)
-                }
-                else {
-                    paddle.position.x = self.size.width - paddle.size.width / 2 - 1
-                }
-            }
-        }
-        /*else {
-            //Checar se a raquete passou da borda da tela
-            if paddle.position.x > self.size.width - paddle.size.width / 2 {
-                paddle.position.x = self.size.width - paddle.size.width / 2
-            }
-            else if paddle.position.x - paddle.size.width / 2 < 0 {
                 paddle.position.x = paddle.size.width / 2 + 1
             }
-        }*/
+        }
+        //Caso contrário, mover para a direita
+        else {
+            //Checar se a raquete vai sair da tela
+            if paddle.position.x + paddle.size.width / 2 + CGFloat(paddleVelocity) - 1 < self.size.width {
+                paddle.position.x += CGFloat(paddleVelocity)
+            }
+            else {
+                paddle.position.x = self.size.width - paddle.size.width / 2 - 1
+            }
+        }
     }
 }
