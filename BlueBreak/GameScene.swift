@@ -19,13 +19,13 @@ class GameScene: SKScene {
     
     override func didMoveToView(view: SKView) {
         
-        for child in self.children {
+        /*for child in self.children {
             if child.name == "paddle" {
                 if let child = child as? SKSpriteNode {
                     self.paddle = child
                 }
             }
-        }
+        }*/
         
     }
     
