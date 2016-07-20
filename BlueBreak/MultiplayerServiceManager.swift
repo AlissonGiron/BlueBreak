@@ -55,12 +55,14 @@ class MultiplayerServiceManager: NSObject {
         return session
     }()
     
-    func sendDataToAllConnectedPeers(data: NSData) {
+    func sendBallDataToPeers(xPos: CGFloat, xV: CGFloat, yV: CGFloat) {
+        let stringData = "\(xPos) \(xV) \(yV)".dataUsingEncoding(NSUTF8StringEncoding)
+        
         do {
-            try self.session.sendData(data, toPeers: self.session.connectedPeers, withMode: MCSessionSendDataMode.Reliable)
+            try self.session.sendData(stringData!, toPeers: self.session.connectedPeers, withMode: MCSessionSendDataMode.Reliable)
         }
         catch {
-            print("ERROR SENDING DATA")
+            NSLog("ERROR SENDING DATA")
         }
     }
 }

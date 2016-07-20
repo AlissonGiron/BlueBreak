@@ -27,6 +27,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     var isFingerOnScreen = false
     var touchLocation: CGFloat = 0.0
     var paddle: SKSpriteNode!
+    var ball: SKSpriteNode!
     var paddleVelocity = 0.0
     
     let velocityMultiplicationFactor = 128.0
@@ -57,6 +58,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
         self.multiplayerService.delegate = self
+        
+        self.paddle = childNodeWithName(PaddleCategoryName) as! SKSpriteNode
+        self.ball = childNodeWithName(BallCategoryName) as! SKSpriteNode
     
         
         //Barreira em volta da tela, para a bola não escapar
@@ -66,8 +70,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         physicsWorld.gravity = CGVector(dx: 0.0, dy: 0.0)
         physicsWorld.contactDelegate = self
         
-        let paddle = childNodeWithName(PaddleCategoryName) as! SKSpriteNode
-        let ball = childNodeWithName(BallCategoryName) as! SKSpriteNode
+        //let paddle = childNodeWithName(PaddleCategoryName) as! SKSpriteNode
+        //self.ball = childNodeWithName(BallCategoryName) as! SKSpriteNode
         ball.physicsBody!.applyImpulse(CGVector(dx: 2.0, dy: -2.0))
         
         let topRect = CGRect(x: frame.origin.x, y: frame.size.height - 1, width: frame.size.width, height: 1)
@@ -81,14 +85,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         borderBody.categoryBitMask = BorderCategory
         
         paddleVelocity = initialVelocity
-        
-        for child in self.children {
-            if child.name == "paddle" {
-                if let child = child as? SKSpriteNode {
-                    self.paddle = child
-                }
-            }
-        }
         
         // 1
         let cols = 7
@@ -210,12 +206,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         }
         // 3
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == TopCategory {
-            print("Hit bottom. First contact has been made.")
             // Bluetooth
-            let value = "Some text"
-            let data = value.dataUsingEncoding(NSUTF8StringEncoding)
+            self.multiplayerService.sendBallDataToPeers(ball.position.x, xV: ball.physicsBody!.velocity.dx, yV: ball.physicsBody!.velocity.dy)
             
-            self.multiplayerService.sendDataToAllConnectedPeers(data!)
+            ball.zPosition = 0
+            ball.physicsBody!.velocity.dx = 0
+            ball.physicsBody!.velocity.dy = 0
         }
         
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
