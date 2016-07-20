@@ -197,6 +197,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == TopCategory {
             print("Hit bottom. First contact has been made.")
             // Bluetooth
+            let value = "Some text"
+            let data = value.dataUsingEncoding(NSUTF8StringEncoding)
+            
+            self.multiplayerService.sendDataToAllConnectedPeers(data!)
         }
         
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
