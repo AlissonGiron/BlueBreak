@@ -17,6 +17,7 @@
 		3F26C9EE1D3D7D7D0066E26A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F26C9EC1D3D7D7D0066E26A /* Main.storyboard */; };
 		3F26C9F01D3D7D7D0066E26A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F26C9EF1D3D7D7D0066E26A /* Assets.xcassets */; };
 		3F26C9F31D3D7D7D0066E26A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F26C9F11D3D7D7D0066E26A /* LaunchScreen.storyboard */; };
+		3F6B566F1D4028970076481E /* MultiplayerServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6B566E1D4028970076481E /* MultiplayerServiceManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		3F26C9EF1D3D7D7D0066E26A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = BlueBreak/Assets.xcassets; sourceTree = "<group>"; };
 		3F26C9F21D3D7D7D0066E26A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3F26C9F41D3D7D7D0066E26A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3F6B566E1D4028970076481E /* MultiplayerServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiplayerServiceManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 				3F26C9E41D3D7D7D0066E26A /* AppDelegate.swift */,
 				3F26C9E61D3D7D7D0066E26A /* GameScene.sks */,
 				3F26C9E81D3D7D7D0066E26A /* GameScene.swift */,
+				3F6B566E1D4028970076481E /* MultiplayerServiceManager.swift */,
 				3F26C9EA1D3D7D7D0066E26A /* GameViewController.swift */,
 				3F26C9F41D3D7D7D0066E26A /* Info.plist */,
 			);
@@ -173,6 +176,7 @@
 				3F16FC471D3EEEC000DD2828 /* GameOver.swift in Sources */,
 				3F26C9EB1D3D7D7D0066E26A /* GameViewController.swift in Sources */,
 				3F26C9E51D3D7D7D0066E26A /* AppDelegate.swift in Sources */,
+				3F6B566F1D4028970076481E /* MultiplayerServiceManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

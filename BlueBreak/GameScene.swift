@@ -20,9 +20,6 @@ let BlockCategory  : UInt32 = 0x1 << 2
 let PaddleCategory : UInt32 = 0x1 << 3
 let BorderCategory : UInt32 = 0x1 << 4
 
-
-
-
 class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     var blocosRestantes = 0
@@ -37,6 +34,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     var lastUpdateTime = 0.0
     
+    var multiplayerService = MultiplayerServiceManager()
     
     lazy var gameState: GKStateMachine = GKStateMachine(states: [
         WaitingForTap(scene: self),
@@ -58,6 +56,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
+        self.multiplayerService.delegate = self
         
         //Barreira em volta da tela, para a bola não escapar
         let borderBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
@@ -145,7 +144,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
             }
         }
         ball.physicsBody!.contactTestBitMask = TopCategory | BlockCategory
-        
     }
     
     
@@ -295,4 +293,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         return (rand) * (to - from) + from
     }
     
+}
+
+extension GameScene : MultiplayerServiceDelegate {
+    func changePaddleColor() {
+        self.paddle.color = UIColor.blueColor()
+    }
 }
