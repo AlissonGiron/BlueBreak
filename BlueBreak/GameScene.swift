@@ -93,12 +93,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         let cols = 7
         let numberOfBlocks = 5
         blocosRestantes = cols * numberOfBlocks // calcula quantos blocos o jogador possui no total
-        
-        let blockWidth = SKSpriteNode(imageNamed: "block").size.width
         let espacamento = 1.4
+        let blockWidth = SKSpriteNode(imageNamed: "block").size.width
         let totalBlocksWidth = (CGFloat(numberOfBlocks) * blockWidth + CGFloat(espacamento) * CGFloat(numberOfBlocks))
         // 2
-        let xOffset = CGFloat(CGRectGetWidth(frame) - totalBlocksWidth) / 2
+        let xOffset = CGFloat(CGRectGetWidth(frame) - totalBlocksWidth) / 6
         var dir : String
         
         // Contrucao dos blocos ao iniciar o jogo
@@ -116,8 +115,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
                 }
                 let block = SKSpriteNode(imageNamed: "block\(dir).png")
                 
-                let positionX = xOffset - CGFloat(espacamento*2) * CGFloat(numberOfBlocks) + CGFloat(CGFloat(i) * CGFloat(espacamento) + 0.5) * blockWidth
-                let positionY = CGRectGetHeight(frame) * 0.05 * CGFloat(j)
+                let positionX = xOffset + CGFloat(CGFloat(i) * CGFloat(espacamento) + 0.40) * blockWidth
+                let positionY = CGRectGetHeight(frame) * 0.05 * CGFloat(j) + 32.5
                 
                 block.position = CGPoint(x: positionX, y: positionY)
             
@@ -127,18 +126,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
                 // Deixa os blocos curvados
                 switch i {
                     case 0:
-                        block.zRotation = 3.4
+                        block.zRotation = -3.4
                     case 1:
                         block.position.y += 12
-                        block.zRotation = -3
+                        block.zRotation = 3
                     case 2:
-                        block.zRotation = CGFloat(M_PI)
                         block.position.y += 16
                     case 3:
                         block.position.y += 12
-                        block.zRotation = 3
+                        block.zRotation = -3
                     case 4:
-                        block.zRotation = -3.4
+                        block.zRotation = 3.4
                     default:
                         break
                 }
