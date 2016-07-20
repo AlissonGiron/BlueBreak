@@ -20,7 +20,11 @@ let PaddleCategory : UInt32 = 0x1 << 3
 let BorderCategory : UInt32 = 0x1 << 4
 
 
+
+
 class GameScene: SKScene, SKPhysicsContactDelegate  {
+    
+    var blocosRestantes = 0
     
     var isFingerOnScreen = false
     var touchLocation: CGFloat = 0.0
@@ -70,21 +74,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         
         // 1
         let cols = 7
-        
         let numberOfBlocks = 5
-        let blockWidth = SKSpriteNode(imageNamed: "block").size.width
-        let totalBlocksWidth = blockWidth * CGFloat(numberOfBlocks)
-        // 2
-        let xOffset = (CGRectGetWidth(frame) - totalBlocksWidth) / 6
-        // 3
+        blocosRestantes = cols * numberOfBlocks // calcula quantos blocos o jogador possui no total
         
+        let blockWidth = SKSpriteNode(imageNamed: "block").size.width
+        let espacamento = 1.4
+        let totalBlocksWidth = (CGFloat(numberOfBlocks) * blockWidth + CGFloat(espacamento) * CGFloat(numberOfBlocks))
+        // 2
+        let xOffset = CGFloat(CGRectGetWidth(frame) - totalBlocksWidth) / 2
+        
+        // Contrucao dos blocos ao iniciar o jogo
         for j in 1...cols {
             for i in 0..<numberOfBlocks {
                 let block = SKSpriteNode(imageNamed: "block.png")
-            
-
-                block.position = CGPoint(x: xOffset + CGFloat(CGFloat(i) * 1.3 + 0.5) * blockWidth,
-                                     y: CGRectGetHeight(frame) * 0.05 * CGFloat(j))
+                
+                let positionX = xOffset - CGFloat(espacamento*2) * CGFloat(numberOfBlocks) + CGFloat(CGFloat(i) * CGFloat(espacamento) + 0.5) * blockWidth
+                let positionY = CGRectGetHeight(frame) * 0.05 * CGFloat(j)
+                
+                block.position = CGPoint(x: positionX, y: positionY)
             
                 block.physicsBody = SKPhysicsBody(rectangleOfSize: block.frame.size)
                 
@@ -149,6 +156,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     }
     
     func breakBlock(node: SKNode) {
+        blocosRestantes -= 1
         node.removeFromParent()
     }
     
@@ -171,6 +179,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
             MovePaddle(touchLocation)
         }
         lastUpdateTime = currentTime
+    }
+    
+    func getBlocosRestantes() -> Int {
+        return blocosRestantes
     }
     
     func MovePaddle(touchLocation: CGFloat) {
