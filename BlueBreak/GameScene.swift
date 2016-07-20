@@ -39,6 +39,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         Playing(scene: self),
         GameOver(scene: self)])
     
+    var gameWon : Bool = false {
+        didSet {
+            let gameOver = childNodeWithName(GameMessageName) as! SKSpriteNode
+            let textureName = gameWon ? "YouWon" : "GameOver"
+            let texture = SKTexture(imageNamed: textureName)
+            let actionSequence = SKAction.sequence([SKAction.setTexture(texture),
+                SKAction.scaleTo(1.0, duration: 0.25)])
+            
+            gameOver.runAction(actionSequence)
+        }
+    }
 
     
     override func didMoveToView(view: SKView) {
@@ -48,7 +59,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         let borderBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
         borderBody.friction = 0
         self.physicsBody = borderBody
-        
         physicsWorld.gravity = CGVector(dx: 0.0, dy: 0.0)
         physicsWorld.contactDelegate = self
         
@@ -65,7 +75,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         ball.physicsBody!.categoryBitMask = BallCategory
         paddle.physicsBody!.categoryBitMask = PaddleCategory
         borderBody.categoryBitMask = BorderCategory
-        
         
         paddleVelocity = initialVelocity
         
@@ -128,10 +137,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
                 addChild(block)
             }
         }
-        
         ball.physicsBody!.contactTestBitMask = TopCategory | BlockCategory
         
     }
+    
+    
+    
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        // 1
+        if isFingerOnScreen {
+            // 2
+            let touch = touches.first
+            let touchLocation = touch!.locationInNode(self)
+            let previousLocation = touch!.previousLocationInNode(self)
+            // 3
+            let paddle = childNodeWithName(PaddleCategoryName) as! SKSpriteNode
+            // 4
+            var paddleX = paddle.position.x + (touchLocation.x - previousLocation.x)
+            // 5
+            paddleX = max(paddleX, paddle.size.width/2)
+            paddleX = min(paddleX, size.width - paddle.size.width/2)
+            // 6
+            paddle.position = CGPoint(x: paddleX, y: paddle.position.y)
+        }
+    }
+    
+    
     
     func didBeginContact(contact: SKPhysicsContact) {
         // 1
@@ -144,6 +175,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         } else {
             firstBody = contact.bodyB
             secondBody = contact.bodyA
+
         }
         // 3
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == TopCategory {
@@ -154,12 +186,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
             breakBlock(secondBody.node!)
             //TODO: check if the game has been won
+            if isGameWon() {
+                gameState.enterState(GameOver)
+                gameWon = false
+            }
         }
     }
     
     func breakBlock(node: SKNode) {
         node.removeFromParent()
     }
+    
+    
+    
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch = touches.first
@@ -228,6 +267,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
                 paddle.position.x = self.size.width - paddle.size.width / 2 - 1
             }
         }
+    }
+    
+    func isGameWon() -> Bool {
+        var numberOfBricks = 0
+        self.enumerateChildNodesWithName(BlockCategoryName) {
+            node, stop in
+            numberOfBricks = numberOfBricks + 1
+        }
+        return numberOfBricks == 0
     }
     
     func randomFloat(from from:CGFloat, to:CGFloat) -> CGFloat {
