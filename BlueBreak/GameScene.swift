@@ -122,7 +122,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
             
                 block.physicsBody = SKPhysicsBody(rectangleOfSize: block.frame.size)
                 
-            
                 // Deixa os blocos curvados
                 switch i {
                     case 0:
