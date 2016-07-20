@@ -99,11 +99,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         let totalBlocksWidth = (CGFloat(numberOfBlocks) * blockWidth + CGFloat(espacamento) * CGFloat(numberOfBlocks))
         // 2
         let xOffset = CGFloat(CGRectGetWidth(frame) - totalBlocksWidth) / 2
+        var dir : String
         
         // Contrucao dos blocos ao iniciar o jogo
         for j in 1...cols {
             for i in 0..<numberOfBlocks {
-                let block = SKSpriteNode(imageNamed: "block.png")
+                
+                if(i < 2) {
+                    dir = "Left"
+                }
+                else if (i == 2) {
+                    dir = "Center"
+                }
+                else {
+                    dir = "Right"
+                }
+                let block = SKSpriteNode(imageNamed: "block\(dir).png")
                 
                 let positionX = xOffset - CGFloat(espacamento*2) * CGFloat(numberOfBlocks) + CGFloat(CGFloat(i) * CGFloat(espacamento) + 0.5) * blockWidth
                 let positionY = CGRectGetHeight(frame) * 0.05 * CGFloat(j)
