@@ -22,7 +22,7 @@ let BorderCategory : UInt32 = 0x1 << 4
 
 class GameScene: SKScene, SKPhysicsContactDelegate  {
     
-    var blocosRestantes = 0
+    var blocosRestantes = 35
     
     var isFingerOnScreen = false
     var touchLocation: CGFloat = 0.0
@@ -72,7 +72,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         
         //let paddle = childNodeWithName(PaddleCategoryName) as! SKSpriteNode
         //self.ball = childNodeWithName(BallCategoryName) as! SKSpriteNode
-        ball.physicsBody!.applyImpulse(CGVector(dx: 2.0, dy: -2.0))
+        //ball.physicsBody!.applyImpulse(CGVector(dx: 2.0, dy: -2.0))
         
         let topRect = CGRect(x: frame.origin.x, y: frame.size.height - 1, width: frame.size.width, height: 1)
         let top = SKNode()
@@ -89,7 +89,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         // 1
         let cols = 7
         let numberOfBlocks = 5
-        blocosRestantes = cols * numberOfBlocks // calcula quantos blocos o jogador possui no total
+        //blocosRestantes = cols * numberOfBlocks // calcula quantos blocos o jogador possui no total
         let espacamento = 1.4
         let blockWidth = SKSpriteNode(imageNamed: "block").size.width
         let totalBlocksWidth = (CGFloat(numberOfBlocks) * blockWidth + CGFloat(espacamento) * CGFloat(numberOfBlocks))
@@ -149,22 +149,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
             }
         }
         ball.physicsBody!.contactTestBitMask = TopCategory | BlockCategory
+        
+        let gameMessage = SKSpriteNode(imageNamed: "TapToPlay")
+        gameMessage.name = GameMessageName
+        gameMessage.position = CGPoint(x: CGRectGetMidX(frame), y: CGRectGetMidY(frame))
+        gameMessage.zPosition = 4
+        gameMessage.setScale(0.0)
+        addChild(gameMessage)
+        
+        gameState.enterState(WaitingForTap)
+        
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
         
         
-        if gameState.currentState is Playing {
-            // Previous code remains here...
-            gameState.enterState(GameOver)
-            gameWon = false
-            
-            if isGameWon() {
-                gameState.enterState(GameOver)
-                gameWon = true
-            }
-            
-        }
+    if gameState.currentState is Playing {
         
         // 1
         var firstBody: SKPhysicsBody
@@ -197,22 +197,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         }
         
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
-            breakBlock(secondBody.node!)
-            //TODO: check if the game has been won
-            if isGameWon() {
-                gameState.enterState(GameOver)
-                gameWon = false
-            }
+            secondBody.node!.removeFromParent()
+            blocosRestantes -= 1
+            print(blocosRestantes)
         }
+    }
     }
     
     func breakBlock(node: SKNode) {
-        blocosRestantes -= 1
-        node.removeFromParent()
+        
     }
-    
-    
-    
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch = touches.first
@@ -255,6 +249,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         
         gameState.updateWithDeltaTime(currentTime)
         
+        if(blocosRestantes == 0)
+        {
+            gameState.enterState(GameOver)
+            gameWon = false
+        }
+        
         if (isFingerOnScreen) {
             paddleVelocity += velocityMultiplicationFactor * (currentTime - lastUpdateTime)
             MovePaddle(touchLocation)
@@ -287,15 +287,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
                 paddle.position.x = self.size.width - paddle.size.width / 2 - 1
             }
         }
-    }
-    
-    func isGameWon() -> Bool {
-        var numberOfBricks = 0
-        self.enumerateChildNodesWithName(BlockCategoryName) {
-            node, stop in
-            numberOfBricks = numberOfBricks + 1
-        }
-        return numberOfBricks == 0
     }
     
     func randomFloat(from from:CGFloat, to:CGFloat) -> CGFloat {
