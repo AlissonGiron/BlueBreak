@@ -75,13 +75,8 @@ extension MultiplayerServiceManager: MCNearbyServiceAdvertiserDelegate {
     
     func advertiser(advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: NSData?, invitationHandler: (Bool, MCSession) -> Void) {
         NSLog("%@", "didReceiveInvitationFromPeer \(peerID)")
-        
-        if (peerID.displayName != "iPhone Simulator") {
-            invitationHandler(true, self.session)
-        }
-        else {
-            invitationHandler(false, self.session)
-        }
+
+        invitationHandler(true, self.session)
     }
 }
 
@@ -95,9 +90,7 @@ extension MultiplayerServiceManager: MCNearbyServiceBrowserDelegate {
         
         NSLog("%@", "invitePeer: \(peerID)")
         
-        if peerID.displayName != "iPhone Simulator" {
-            browser.invitePeer(peerID, toSession: self.session, withContext: nil, timeout: 10)
-        }
+        browser.invitePeer(peerID, toSession: self.session, withContext: nil, timeout: 10)
     }
     
     func browser(browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
@@ -143,7 +136,6 @@ extension MultiplayerServiceManager : MCSessionDelegate {
         print(values)
         
         for value in values {
-            print(CGFloat((value as NSString).doubleValue))
             convertedValues.append(CGFloat((value as NSString).doubleValue))
         }
         

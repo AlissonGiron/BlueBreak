@@ -151,29 +151,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         ball.physicsBody!.contactTestBitMask = TopCategory | BlockCategory
     }
     
-    
-    
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        // 1
-        if isFingerOnScreen {
-            // 2
-            let touch = touches.first
-            let touchLocation = touch!.locationInNode(self)
-            let previousLocation = touch!.previousLocationInNode(self)
-            // 3
-            let paddle = childNodeWithName(PaddleCategoryName) as! SKSpriteNode
-            // 4
-            var paddleX = paddle.position.x + (touchLocation.x - previousLocation.x)
-            // 5
-            paddleX = max(paddleX, paddle.size.width/2)
-            paddleX = min(paddleX, size.width - paddle.size.width/2)
-            // 6
-            paddle.position = CGPoint(x: paddleX, y: paddle.position.y)
-        }
-    }
-    
-    
-    
     func didBeginContact(contact: SKPhysicsContact) {
         
         
@@ -206,6 +183,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
             // Bluetooth
             
             if self.multiplayerService.session.connectedPeers.count > 0 {
+                print(ball.position.x, ball.physicsBody!.velocity.dx, ball.physicsBody!.velocity.dy)
+                
                 self.multiplayerService.sendBallDataToPeers(ball.position.x, xV: ball.physicsBody!.velocity.dx, yV: ball.physicsBody!.velocity.dy)
                 
                 ball.alpha = 0
@@ -326,7 +305,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
 extension GameScene : MultiplayerServiceDelegate {
     func receiveBall(xPos: CGFloat, xV: CGFloat, yV: CGFloat) {
         self.ball.position.x = xPos
-        self.ball.position.y = self.size.height
+        self.ball.position.y = self.size.height - 15
         self.ball.physicsBody!.velocity.dx = xV
         self.ball.physicsBody!.velocity.dy = yV
         self.ball.alpha = 1
