@@ -184,8 +184,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
             
             if self.multiplayerService.session.connectedPeers.count > 0 && ball.alpha == 1 {
                 let x = ball.position.x
-                let xv = -ball.physicsBody!.velocity.dx
-                let yv = -ball.physicsBody!.velocity.dy
+                let xv = ball.physicsBody!.velocity.dx
+                let yv = ball.physicsBody!.velocity.dy
                 
                 self.multiplayerService.sendBallDataToPeers(x, xV: xv, yV: yv)
                 
