@@ -19,6 +19,7 @@
 		3F26C9F31D3D7D7D0066E26A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F26C9F11D3D7D7D0066E26A /* LaunchScreen.storyboard */; };
 		3F6B566F1D4028970076481E /* MultiplayerServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6B566E1D4028970076481E /* MultiplayerServiceManager.swift */; };
 		3FEB8F3C1D404AE500310D91 /* StartGameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEB8F3B1D404AE500310D91 /* StartGameScreen.swift */; };
+		FB54B49E1D415042008AC061 /* RecarregaButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB54B49D1D415042008AC061 /* RecarregaButton.swift */; };
 		FB7A4C1F1D413FAE00285CC2 /* ConnectGameScreenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7A4C1E1D413FAE00285CC2 /* ConnectGameScreenCell.swift */; };
 		FB7A4C211D41401200285CC2 /* ConnectGameScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7A4C201D41401200285CC2 /* ConnectGameScreenController.swift */; };
 /* End PBXBuildFile section */
@@ -38,6 +39,7 @@
 		3F26C9F41D3D7D7D0066E26A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3F6B566E1D4028970076481E /* MultiplayerServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiplayerServiceManager.swift; sourceTree = "<group>"; };
 		3FEB8F3B1D404AE500310D91 /* StartGameScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartGameScreen.swift; sourceTree = "<group>"; };
+		FB54B49D1D415042008AC061 /* RecarregaButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecarregaButton.swift; sourceTree = "<group>"; };
 		FB7A4C1E1D413FAE00285CC2 /* ConnectGameScreenCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectGameScreenCell.swift; sourceTree = "<group>"; };
 		FB7A4C201D41401200285CC2 /* ConnectGameScreenController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectGameScreenController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,8 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				3F26C9EC1D3D7D7D0066E26A /* Main.storyboard */,
-				FB7A4C1E1D413FAE00285CC2 /* ConnectGameScreenCell.swift */,
-				FB7A4C201D41401200285CC2 /* ConnectGameScreenController.swift */,
+				FB54B49C1D414F8E008AC061 /* Tabela de Conexao */,
 				3FEB8F3B1D404AE500310D91 /* StartGameScreen.swift */,
 				3F26C9EF1D3D7D7D0066E26A /* Assets.xcassets */,
 				3F26C9F11D3D7D7D0066E26A /* LaunchScreen.storyboard */,
@@ -97,6 +98,16 @@
 				3F26C9F41D3D7D7D0066E26A /* Info.plist */,
 			);
 			path = BlueBreak;
+			sourceTree = "<group>";
+		};
+		FB54B49C1D414F8E008AC061 /* Tabela de Conexao */ = {
+			isa = PBXGroup;
+			children = (
+				FB54B49D1D415042008AC061 /* RecarregaButton.swift */,
+				FB7A4C201D41401200285CC2 /* ConnectGameScreenController.swift */,
+				FB7A4C1E1D413FAE00285CC2 /* ConnectGameScreenCell.swift */,
+			);
+			name = "Tabela de Conexao";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -172,6 +183,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3FEB8F3C1D404AE500310D91 /* StartGameScreen.swift in Sources */,
+				FB54B49E1D415042008AC061 /* RecarregaButton.swift in Sources */,
 				3F16FC3C1D3EECB200DD2828 /* Playing.swift in Sources */,
 				3F26C9E91D3D7D7D0066E26A /* GameScene.swift in Sources */,
 				3F16FC451D3EEEAE00DD2828 /* WaitingForTap.swift in Sources */,
