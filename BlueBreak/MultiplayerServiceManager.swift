@@ -18,7 +18,7 @@ protocol MultiplayerServiceDelegate {
     
     //func connectedWithPeer(peerID: MCPeerID)
     
-    func changePaddleColor()
+    func receiveBall(xPos: CGFloat, xV: CGFloat, yV: CGFloat)
 }
 
 class MultiplayerServiceManager: NSObject {
@@ -126,8 +126,19 @@ extension MultiplayerServiceManager : MCSessionDelegate {
     }
     
     func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
-        let received = NSString(data: data, encoding: NSUTF8StringEncoding)
-        print("RECEIVED DATA: \(received!)")
+        let received = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
+        
+        let values: [String] = received.characters.split{$0 == " "}.map(String.init)
+        var convertedValues: [CGFloat] = [CGFloat]()
+        
+        print(values)
+        
+        for value in values {
+            print(CGFloat((value as NSString).doubleValue))
+            convertedValues.append(CGFloat((value as NSString).doubleValue))
+        }
+        
+        self.delegate?.receiveBall(convertedValues[0], xV: convertedValues[1], yV: convertedValues[2])
         
         /*NSLog("%@", "didReceiveData: \(data)")
          let dataString = NSString(data: data, encoding: NSUTF8StringEncoding)
@@ -161,10 +172,6 @@ extension MultiplayerServiceManager : MCSessionDelegate {
         NSLog("%@", "peer \(peerID) didChangeState: \(state.stringValue())")
         //self.delegate!.connectedDevicesChanged(self, state: state, connectedDevices:
         //session.connectedPeers.map({$0.displayName}))
-        
-        if state == .Connected {
-            self.delegate?.changePaddleColor()
-        }
     }
 }
 

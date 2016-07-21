@@ -207,11 +207,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         // 3
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == TopCategory {
             // Bluetooth
-            self.multiplayerService.sendBallDataToPeers(ball.position.x, xV: ball.physicsBody!.velocity.dx, yV: ball.physicsBody!.velocity.dy)
             
-            ball.zPosition = 0
-            ball.physicsBody!.velocity.dx = 0
-            ball.physicsBody!.velocity.dy = 0
+            if self.multiplayerService.session.connectedPeers.count > 0 {
+                self.multiplayerService.sendBallDataToPeers(ball.position.x, xV: ball.physicsBody!.velocity.dx, yV: ball.physicsBody!.velocity.dy)
+                
+                ball.alpha = 0
+                ball.physicsBody!.velocity.dx = 0
+                ball.physicsBody!.velocity.dy = 0
+            }
         }
         
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
@@ -324,7 +327,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
 }
 
 extension GameScene : MultiplayerServiceDelegate {
-    func changePaddleColor() {
-        self.paddle.color = UIColor.blueColor()
+    func receiveBall(xPos: CGFloat, xV: CGFloat, yV: CGFloat) {
+        self.ball.position.x = xPos
+        self.ball.position.y = self.size.height
+        self.ball.physicsBody!.velocity.dx = xV
+        self.ball.physicsBody!.velocity.dy = yV
+        self.ball.alpha = 1
     }
 }
