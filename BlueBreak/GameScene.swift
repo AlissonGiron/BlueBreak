@@ -57,6 +57,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
         self.multiplayerService.delegate = self
+    
         
         //Barreira em volta da tela, para a bola não escapar
         let borderBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
@@ -178,6 +179,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     
     
     func didBeginContact(contact: SKPhysicsContact) {
+        
+        
+        if gameState.currentState is Playing {
+            // Previous code remains here...
+            gameState.enterState(GameOver)
+            gameWon = false
+            
+            if isGameWon() {
+                gameState.enterState(GameOver)
+                gameWon = true
+            }
+            
+        }
+        
         // 1
         var firstBody: SKPhysicsBody
         var secondBody: SKPhysicsBody
@@ -194,6 +209,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == TopCategory {
             print("Hit bottom. First contact has been made.")
             // Bluetooth
+            let value = "Some text"
+            let data = value.dataUsingEncoding(NSUTF8StringEncoding)
+            
+            self.multiplayerService.sendDataToAllConnectedPeers(data!)
         }
         
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
@@ -252,6 +271,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
     }
    
     override func update(currentTime: CFTimeInterval) {
+        
+        gameState.updateWithDeltaTime(currentTime)
         
         if (isFingerOnScreen) {
             paddleVelocity += velocityMultiplicationFactor * (currentTime - lastUpdateTime)

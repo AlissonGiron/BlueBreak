@@ -54,6 +54,15 @@ class MultiplayerServiceManager: NSObject {
         session.delegate = self
         return session
     }()
+    
+    func sendDataToAllConnectedPeers(data: NSData) {
+        do {
+            try self.session.sendData(data, toPeers: self.session.connectedPeers, withMode: MCSessionSendDataMode.Reliable)
+        }
+        catch {
+            print("ERROR SENDING DATA")
+        }
+    }
 }
 
 extension MultiplayerServiceManager: MCNearbyServiceAdvertiserDelegate {
@@ -115,6 +124,9 @@ extension MultiplayerServiceManager : MCSessionDelegate {
     }
     
     func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
+        let received = NSString(data: data, encoding: NSUTF8StringEncoding)
+        print("RECEIVED DATA: \(received!)")
+        
         /*NSLog("%@", "didReceiveData: \(data)")
          let dataString = NSString(data: data, encoding: NSUTF8StringEncoding)
          
