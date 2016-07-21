@@ -19,6 +19,8 @@
 		3F26C9F31D3D7D7D0066E26A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F26C9F11D3D7D7D0066E26A /* LaunchScreen.storyboard */; };
 		3F6B566F1D4028970076481E /* MultiplayerServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6B566E1D4028970076481E /* MultiplayerServiceManager.swift */; };
 		3FEB8F3C1D404AE500310D91 /* StartGameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEB8F3B1D404AE500310D91 /* StartGameScreen.swift */; };
+		FB7A4C1F1D413FAE00285CC2 /* ConnectGameScreenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7A4C1E1D413FAE00285CC2 /* ConnectGameScreenCell.swift */; };
+		FB7A4C211D41401200285CC2 /* ConnectGameScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7A4C201D41401200285CC2 /* ConnectGameScreenController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		3F26C9F41D3D7D7D0066E26A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3F6B566E1D4028970076481E /* MultiplayerServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiplayerServiceManager.swift; sourceTree = "<group>"; };
 		3FEB8F3B1D404AE500310D91 /* StartGameScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartGameScreen.swift; sourceTree = "<group>"; };
+		FB7A4C1E1D413FAE00285CC2 /* ConnectGameScreenCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectGameScreenCell.swift; sourceTree = "<group>"; };
+		FB7A4C201D41401200285CC2 /* ConnectGameScreenController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectGameScreenController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +84,8 @@
 			isa = PBXGroup;
 			children = (
 				3F26C9EC1D3D7D7D0066E26A /* Main.storyboard */,
+				FB7A4C1E1D413FAE00285CC2 /* ConnectGameScreenCell.swift */,
+				FB7A4C201D41401200285CC2 /* ConnectGameScreenController.swift */,
 				3FEB8F3B1D404AE500310D91 /* StartGameScreen.swift */,
 				3F26C9EF1D3D7D7D0066E26A /* Assets.xcassets */,
 				3F26C9F11D3D7D7D0066E26A /* LaunchScreen.storyboard */,
@@ -169,10 +175,12 @@
 				3F16FC3C1D3EECB200DD2828 /* Playing.swift in Sources */,
 				3F26C9E91D3D7D7D0066E26A /* GameScene.swift in Sources */,
 				3F16FC451D3EEEAE00DD2828 /* WaitingForTap.swift in Sources */,
+				FB7A4C211D41401200285CC2 /* ConnectGameScreenController.swift in Sources */,
 				3F16FC471D3EEEC000DD2828 /* GameOver.swift in Sources */,
 				3F26C9EB1D3D7D7D0066E26A /* GameViewController.swift in Sources */,
 				3F26C9E51D3D7D7D0066E26A /* AppDelegate.swift in Sources */,
 				3F6B566F1D4028970076481E /* MultiplayerServiceManager.swift in Sources */,
+				FB7A4C1F1D413FAE00285CC2 /* ConnectGameScreenCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
