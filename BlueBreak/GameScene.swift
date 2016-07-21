@@ -185,11 +185,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
             if self.multiplayerService.session.connectedPeers.count > 0 {
                 print(ball.position.x, ball.physicsBody!.velocity.dx, ball.physicsBody!.velocity.dy)
                 
-                self.multiplayerService.sendBallDataToPeers(ball.position.x, xV: ball.physicsBody!.velocity.dx, yV: ball.physicsBody!.velocity.dy)
+                //CONTINUAR AQUI
+                
+                let x = ball.position.x
+                let xv = ball.physicsBody!.velocity.dx * -1
+                let yv = ball.physicsBody!.velocity.dy * -1
+                
+                self.multiplayerService.sendBallDataToPeers(x, xV: xv, yV: yv)
                 
                 ball.alpha = 0
                 ball.physicsBody!.velocity.dx = 0
                 ball.physicsBody!.velocity.dy = 0
+                ball.position.y = self.size.height - 15
             }
         }
         
@@ -304,10 +311,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
 
 extension GameScene : MultiplayerServiceDelegate {
     func receiveBall(xPos: CGFloat, xV: CGFloat, yV: CGFloat) {
+        self.ball.physicsBody!.velocity.dx = 0
+        self.ball.physicsBody!.velocity.dy = 0
+        
         self.ball.position.x = xPos
         self.ball.position.y = self.size.height - 15
-        self.ball.physicsBody!.velocity.dx = xV
-        self.ball.physicsBody!.velocity.dy = yV
+        self.ball.physicsBody!.applyImpulse(CGVectorMake(xV, yV))
+        //self.ball.physicsBody!.velocity.dx = xV
+        //self.ball.physicsBody!.velocity.dy = yV
         self.ball.alpha = 1
     }
 }
