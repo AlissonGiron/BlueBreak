@@ -182,21 +182,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate  {
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == TopCategory {
             // Bluetooth
             
-            if self.multiplayerService.session.connectedPeers.count > 0 {
-                print(ball.position.x, ball.physicsBody!.velocity.dx, ball.physicsBody!.velocity.dy)
-                
-                //CONTINUAR AQUI
-                
+            if self.multiplayerService.session.connectedPeers.count > 0 && ball.alpha == 1 {
                 let x = ball.position.x
-                let xv = ball.physicsBody!.velocity.dx * -1
-                let yv = ball.physicsBody!.velocity.dy * -1
+                let xv = -ball.physicsBody!.velocity.dx
+                let yv = -ball.physicsBody!.velocity.dy
                 
                 self.multiplayerService.sendBallDataToPeers(x, xV: xv, yV: yv)
                 
                 ball.alpha = 0
                 ball.physicsBody!.velocity.dx = 0
                 ball.physicsBody!.velocity.dy = 0
-                ball.position.y = self.size.height - 15
+                ball.position.y = self.size.height - 2
             }
         }
         
@@ -306,8 +302,8 @@ extension GameScene : MultiplayerServiceDelegate {
         self.ball.physicsBody!.velocity.dy = 0
         
         self.ball.position.x = xPos
-        self.ball.position.y = self.size.height - 15
-        self.ball.physicsBody!.applyImpulse(CGVectorMake(xV, yV))
+        self.ball.position.y = self.size.height - 2
+        self.ball.physicsBody!.velocity = CGVectorMake(xV, yV)
         //self.ball.physicsBody!.velocity.dx = xV
         //self.ball.physicsBody!.velocity.dy = yV
         self.ball.alpha = 1
